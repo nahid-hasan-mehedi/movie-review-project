@@ -1,0 +1,50 @@
+<%- include('partials/header') %>
+
+<div class="jumbotron text-center">
+  <form action="/" method="GET">
+    <button type="submit" class="btn btn-dark">HOME</button>
+  </form>
+  <form action="/movies/filter" method="GET">
+    <label for="startYear">Start Year:</label>
+    <input type="number" id="startYear" name="startYear" min="1800" max="2100">
+    <label for="runtimeMinutes">Runtime (minutes):</label>
+    <input type="number" id="runtimeMinutes" name="runtimeMinutes" min="1" max="999">
+    <button type="submit" class="btn btn-primary">Filter Movies</button>
+  </form>
+  <div class="container">
+    <h1 class="display-3">Here are the movies</h1>
+    <p class="movies-text">
+      <% movies.forEach(function(movie) { %>
+        <strong>Title:</strong> <%= movie.originalTitle %><br>
+        <strong>Start Year:</strong> <%= movie.startYear %><br>
+        <strong>Runtime (minutes):</strong> <%= movie.runtimeMinutes %><br>
+        <strong>Genres:</strong> <%= movie.genres %><br>
+        <strong>Average Rating:</strong> <%= movie.averageRating.toFixed(2) %><br>
+        <strong>Comments:</strong>
+        <% movie.comments.forEach(function(comment) { %>
+          <p><%= comment.text %></p>
+        <% }); %>
+
+        <form action="/movies/<%= movie._id %>/addcomment" method="POST">
+          <label for="comment">Add a comment:</label>
+          <input type="text" id="comment" name="comment" required>
+          <button type="submit" class="btn btn-dark">Submit</button>
+        </form>
+
+        <form id="ratingForm" action="/movies/<%= movie._id %>/addrating" method="POST">
+          <label for="ratingValue">Add a rating (1-5):</label>
+          <input type="number" id="ratingValue" name="ratingValue" min="1" max="5" required>
+          <button type="submit" class="btn btn-dark">Submit</button>
+        </form>
+        
+        <hr>
+      <% }); %>
+    </p>
+    
+    <form action="/logout" method="POST">
+      <button type="submit" class="btn btn-dark">Log Out</button>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
